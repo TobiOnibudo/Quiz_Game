@@ -1,11 +1,35 @@
 package com.example.quizgame
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
+import android.view.animation.AnimationUtils
+import com.example.quizgame.databinding.ActivityWelcomeBinding
 
 class WelcomeActivity : AppCompatActivity() {
+
+    lateinit var splashBinding : ActivityWelcomeBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_welcome)
+        splashBinding = ActivityWelcomeBinding.inflate(layoutInflater)
+        val view = splashBinding.root
+        setContentView(view)
+
+        //adding animation to the textView "Quiz Game"
+        val alphaAnimation = AnimationUtils.loadAnimation(applicationContext,R.anim.splash_anim)
+        splashBinding.textViewSplash.startAnimation(alphaAnimation)
+
+        //transition to actual home page after set delay time
+        val handler = Handler(Looper.getMainLooper())
+        handler.postDelayed(object : Runnable{
+            override fun run() {
+                val intent = Intent(this@WelcomeActivity,MainActivity::class.java)
+                startActivity(intent)
+                finish()
+            }
+
+        },5000)
     }
 }
