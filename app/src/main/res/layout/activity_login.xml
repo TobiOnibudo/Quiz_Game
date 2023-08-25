@@ -38,6 +38,7 @@
             app:startIconDrawable="@drawable/email">
 
             <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/editTextLoginEmail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Email"
@@ -59,6 +60,7 @@
             app:startIconDrawable="@drawable/lock">
 
             <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/editTextLoginPassword"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Password"
@@ -70,6 +72,7 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <Button
+            android:id="@+id/buttonSignin"
             android:layout_width="250dp"
             android:layout_height="60dp"
             android:layout_marginTop="20dp"
@@ -110,12 +113,13 @@
 
 
         <com.google.android.gms.common.SignInButton
+            android:id="@+id/buttonGoogleSignin"
             android:layout_width="250dp"
             android:layout_height="60dp"
             android:layout_marginTop="10dp" />
 
         <TextView
-            android:id="@+id/textView"
+            android:id="@+id/textViewSignup"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/account"
@@ -123,7 +127,7 @@
             android:textSize="20sp" />
 
         <TextView
-            android:id="@+id/textView2"
+            android:id="@+id/textViewForgotPassword"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
