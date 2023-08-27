@@ -3,6 +3,7 @@ package com.example.quizgame
 import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.view.View
 import android.widget.Toast
 import com.example.quizgame.databinding.ActivityQuizBinding
@@ -33,13 +34,21 @@ class QuizActivity : AppCompatActivity() {
     private var userCorrect = 0
     private var userWrong = 0
 
+    private lateinit var timer: CountDownTimer
+    private val totalTime = 25000L
+    private var timerContinue = false
+    private var leftTime = totalTime
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         quizBinding = ActivityQuizBinding.inflate(layoutInflater)
         val view = quizBinding.root
         setContentView(view)
 
+        gameLogic()
+
         quizBinding.buttonNext.setOnClickListener {
+            resetTimer()
             gameLogic()
         }
 
@@ -48,6 +57,8 @@ class QuizActivity : AppCompatActivity() {
         }
 
         quizBinding.textViewA.setOnClickListener {
+            pauseTimer()
+
             userAnswer = "a"
             if (correctAnswer == userAnswer )
             {
@@ -59,13 +70,15 @@ class QuizActivity : AppCompatActivity() {
             {
                 quizBinding.textViewA.setBackgroundColor(Color.RED)
                 userWrong++
-                quizBinding.textViewCorrect.text = userWrong.toString()
+                quizBinding.textViewWrong.text = userWrong.toString()
                 findAnswer()
             }
             disableClickableOfOptions()
         }
 
         quizBinding.textViewB.setOnClickListener {
+            pauseTimer()
+
             userAnswer = "b"
             if (correctAnswer == userAnswer )
             {
@@ -77,12 +90,14 @@ class QuizActivity : AppCompatActivity() {
             {
                 quizBinding.textViewB.setBackgroundColor(Color.RED)
                 userWrong++
-                quizBinding.textViewCorrect.text = userWrong.toString()
+                quizBinding.textViewWrong.text = userWrong.toString()
                 findAnswer()
             }
             disableClickableOfOptions()
         }
         quizBinding.textViewC.setOnClickListener {
+            pauseTimer()
+
             userAnswer = "c"
             if (correctAnswer == userAnswer )
             {
@@ -94,13 +109,15 @@ class QuizActivity : AppCompatActivity() {
             {
                 quizBinding.textViewC.setBackgroundColor(Color.RED)
                 userWrong++
-                quizBinding.textViewCorrect.text = userWrong.toString()
+                quizBinding.textViewWrong.text = userWrong.toString()
                 findAnswer()
             }
             disableClickableOfOptions()
         }
 
         quizBinding.textViewD.setOnClickListener {
+            pauseTimer()
+
             userAnswer = "d"
             if (correctAnswer == userAnswer )
             {
@@ -112,7 +129,7 @@ class QuizActivity : AppCompatActivity() {
             {
                 quizBinding.textViewD.setBackgroundColor(Color.RED)
                 userWrong++
-                quizBinding.textViewCorrect.text = userWrong.toString()
+                quizBinding.textViewWrong.text = userWrong.toString()
                 findAnswer()
             }
             disableClickableOfOptions()
@@ -122,6 +139,8 @@ class QuizActivity : AppCompatActivity() {
 
     private fun gameLogic()
     {
+        restoreOptions()
+
         databaseReference.addValueEventListener(object : ValueEventListener{
             override fun onDataChange(snapshot: DataSnapshot) {
 
@@ -146,6 +165,8 @@ class QuizActivity : AppCompatActivity() {
                     quizBinding.linearLayoutQuestion.visibility  = View.VISIBLE
                     quizBinding.linearLayoutInfo.visibility  = View.VISIBLE
                     quizBinding.linearLayoutButtons.visibility  = View.VISIBLE
+
+                    startTimer()
                 }
                 else
                 {
@@ -164,7 +185,7 @@ class QuizActivity : AppCompatActivity() {
     }
 
 
-    fun findAnswer()
+    private fun findAnswer()
     {
         when (correctAnswer)
         {
@@ -177,7 +198,7 @@ class QuizActivity : AppCompatActivity() {
     }
 
 
-    fun disableClickableOfOptions()
+    private fun disableClickableOfOptions()
     {
         quizBinding.textViewA.isClickable = false
         quizBinding.textViewB.isClickable = false
@@ -185,5 +206,64 @@ class QuizActivity : AppCompatActivity() {
         quizBinding.textViewD.isClickable = false
 
     }
+
+    private fun restoreOptions()
+    {
+        quizBinding.textViewA.setBackgroundColor(Color.WHITE)
+        quizBinding.textViewB.setBackgroundColor(Color.WHITE)
+        quizBinding.textViewC.setBackgroundColor(Color.WHITE)
+        quizBinding.textViewD.setBackgroundColor(Color.WHITE)
+
+
+        quizBinding.textViewA.isClickable = true
+        quizBinding.textViewB.isClickable = true
+        quizBinding.textViewC.isClickable = true
+        quizBinding.textViewD.isClickable = true
+
+    }
+
+    private fun startTimer()
+    {
+        timer = object  : CountDownTimer(leftTime,1000)
+        {
+            override fun onTick(millisUntilFinish: Long) {
+                leftTime = millisUntilFinish
+                updateCountDownText()
+            }
+
+            override fun onFinish() {
+                resetTimer()
+                updateCountDownText()
+                quizBinding.textViewQuestion.text = "Sorry, Time is up for this question!"
+                timerContinue = false
+                disableClickableOfOptions()
+
+            }
+
+        }.start()
+
+        timerContinue = true
+    }
+
+
+
+    private fun updateCountDownText() {
+        val remainingTime : Int = (leftTime/1000).toInt()
+        quizBinding.textViewTime.text = remainingTime.toString()
+    }
+
+    private fun pauseTimer()
+    {
+        timer.cancel()
+        timerContinue = false
+    }
+
+    private fun resetTimer() {
+        pauseTimer()
+        leftTime = totalTime
+        updateCountDownText()
+    }
+
+
 
 }
