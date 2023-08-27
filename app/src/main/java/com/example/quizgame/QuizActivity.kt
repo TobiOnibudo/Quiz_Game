@@ -1,5 +1,6 @@
 package com.example.quizgame
 
+import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -27,6 +28,11 @@ class QuizActivity : AppCompatActivity() {
     private var questionCount : Long = 0
     private var questionNumber = 1
 
+    private var userAnswer = ""
+
+    private var userCorrect = 0
+    private var userWrong = 0
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         quizBinding = ActivityQuizBinding.inflate(layoutInflater)
@@ -42,18 +48,74 @@ class QuizActivity : AppCompatActivity() {
         }
 
         quizBinding.textViewA.setOnClickListener {
-
+            userAnswer = "a"
+            if (correctAnswer == userAnswer )
+            {
+                quizBinding.textViewA.setBackgroundColor(Color.GREEN)
+                userCorrect++
+                quizBinding.textViewCorrect.text = userCorrect.toString()
+            }
+            else
+            {
+                quizBinding.textViewA.setBackgroundColor(Color.RED)
+                userWrong++
+                quizBinding.textViewCorrect.text = userWrong.toString()
+                findAnswer()
+            }
+            disableClickableOfOptions()
         }
 
         quizBinding.textViewB.setOnClickListener {
-
+            userAnswer = "b"
+            if (correctAnswer == userAnswer )
+            {
+                quizBinding.textViewB.setBackgroundColor(Color.GREEN)
+                userCorrect++
+                quizBinding.textViewCorrect.text = userCorrect.toString()
+            }
+            else
+            {
+                quizBinding.textViewB.setBackgroundColor(Color.RED)
+                userWrong++
+                quizBinding.textViewCorrect.text = userWrong.toString()
+                findAnswer()
+            }
+            disableClickableOfOptions()
         }
         quizBinding.textViewC.setOnClickListener {
-
+            userAnswer = "c"
+            if (correctAnswer == userAnswer )
+            {
+                quizBinding.textViewC.setBackgroundColor(Color.GREEN)
+                userCorrect++
+                quizBinding.textViewCorrect.text = userCorrect.toString()
+            }
+            else
+            {
+                quizBinding.textViewC.setBackgroundColor(Color.RED)
+                userWrong++
+                quizBinding.textViewCorrect.text = userWrong.toString()
+                findAnswer()
+            }
+            disableClickableOfOptions()
         }
 
         quizBinding.textViewD.setOnClickListener {
-
+            userAnswer = "d"
+            if (correctAnswer == userAnswer )
+            {
+                quizBinding.textViewD.setBackgroundColor(Color.GREEN)
+                userCorrect++
+                quizBinding.textViewCorrect.text = userCorrect.toString()
+            }
+            else
+            {
+                quizBinding.textViewD.setBackgroundColor(Color.RED)
+                userWrong++
+                quizBinding.textViewCorrect.text = userWrong.toString()
+                findAnswer()
+            }
+            disableClickableOfOptions()
         }
     }
 
@@ -100,4 +162,28 @@ class QuizActivity : AppCompatActivity() {
 
         })
     }
+
+
+    fun findAnswer()
+    {
+        when (correctAnswer)
+        {
+            "a" -> quizBinding.textViewA.setBackgroundColor(Color.GREEN)
+            "b" -> quizBinding.textViewB.setBackgroundColor(Color.GREEN)
+            "c" -> quizBinding.textViewC.setBackgroundColor(Color.GREEN)
+            "d" -> quizBinding.textViewD.setBackgroundColor(Color.GREEN)
+        }
+
+    }
+
+
+    fun disableClickableOfOptions()
+    {
+        quizBinding.textViewA.isClickable = false
+        quizBinding.textViewB.isClickable = false
+        quizBinding.textViewC.isClickable = false
+        quizBinding.textViewD.isClickable = false
+
+    }
+
 }
