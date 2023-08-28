@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.os.CountDownTimer
 import android.view.View
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import com.example.quizgame.databinding.ActivityQuizBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
@@ -177,7 +178,21 @@ class QuizActivity : AppCompatActivity() {
                 }
                 else
                 {
-                    Toast.makeText(applicationContext,"You've answered all the questions",Toast.LENGTH_SHORT).show()
+                     val dialogMessage = AlertDialog.Builder(this@QuizActivity)
+                    dialogMessage.setTitle("Quiz Game")
+                    dialogMessage.setMessage("Congratulations!!!\nYou have answered all the questions. Do you want to see the result?")
+                    dialogMessage.setCancelable(false)
+                    dialogMessage.setPositiveButton("See Result"){ dialogWindow,position ->
+                        sendScore()
+                    }
+
+                    dialogMessage.setNegativeButton("Play Again"){dialogWindow,position ->
+                        val intent = Intent(this@QuizActivity,MainActivity::class.java)
+                        startActivity(intent)
+                        finish()
+                    }
+
+                    dialogMessage.create().show()
                 }
 
                 questionNumber++
