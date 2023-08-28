@@ -1,5 +1,6 @@
 package com.example.quizgame
 
+import android.content.Intent
 import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -7,6 +8,7 @@ import android.os.CountDownTimer
 import android.view.View
 import android.widget.Toast
 import com.example.quizgame.databinding.ActivityQuizBinding
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
@@ -39,6 +41,11 @@ class QuizActivity : AppCompatActivity() {
     private var timerContinue = false
     private var leftTime = totalTime
 
+    private val auth = FirebaseAuth.getInstance()
+    private val user = auth.currentUser
+    private val scoreRef = database.reference
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         quizBinding = ActivityQuizBinding.inflate(layoutInflater)
@@ -53,7 +60,7 @@ class QuizActivity : AppCompatActivity() {
         }
 
         quizBinding.buttonFinish.setOnClickListener {
-
+            sendScore()
         }
 
         quizBinding.textViewA.setOnClickListener {
@@ -264,6 +271,23 @@ class QuizActivity : AppCompatActivity() {
         updateCountDownText()
     }
 
+
+
+    private fun sendScore()
+    {
+        // players scores to be stored in database after finishing the game
+        user?.let {
+            val userUID = it.uid
+            scoreRef.child("scores").child(userUID).child("correct").setValue(userCorrect)
+            scoreRef.child("scores").child(userUID).child("wrong").setValue(userWrong).addOnSuccessListener {
+                Toast.makeText(applicationContext,"Scores sent to database successfully",Toast.LENGTH_SHORT).show()
+                val intent = Intent(this@QuizActivity,ResultActivity::class.java)
+                startActivity(intent)
+                finish()
+            }
+        }
+
+    }
 
 
 }
